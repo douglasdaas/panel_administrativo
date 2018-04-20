@@ -1,0 +1,27 @@
+{
+  "name": "panel_administrativo",
+  "version": "1.0.0",
+  "description": "Proyecto de prueba",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Douglas A.",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "mongodb": "^2.2.5",
+    "mongoose": "^5.0.15"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/douglasdaas/panel_administrativo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/douglasdaas/panel_administrativo/issues"
+  },
+  "homepage": "https://github.com/douglasdaas/panel_administrativo#readme"
+}
