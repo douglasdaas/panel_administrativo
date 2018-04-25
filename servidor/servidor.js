@@ -28,7 +28,21 @@ app.post('/usuarios', (req, res) =>{ //<--- la ruta /reporte es para crear una n
     res.send(usuario);
   }, (error) => {
     res.status(400).send(error);// envia el error del guardado
-  })
+  });
+
+  app.post('/empresas', (req, res) =>{ //<--- la ruta /reporte es para crear una nueva empresa
+    var reporte = new Empresa({
+      Nombre: req.body.Nombre,
+      RIF: req.body.RIF
+    });
+
+    reporte.save().then( (empresa) => { //<----- guarda una nueva empresa
+      res.send(empresa);
+    }, (error) => {
+      res.status(400).send(error);// envia el error del guardado
+    });
+
+    
 
 
 });
