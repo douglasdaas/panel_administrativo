@@ -19,7 +19,7 @@ var Reporte = mongoose.model('Reporte',{
     minlength: 1,
     trimp: true
   },
-  Modeda: {
+  Moneda: {
     type: String,
     required: true,
     minlength: 1,
@@ -35,15 +35,15 @@ var Reporte = mongoose.model('Reporte',{
 });
 
 // var nuevoReporte = new Reporte({
-//   Nombre:'Prueba de Reporte 2',
-//   Descripcion:'Esto es la segunda prueba de agregar un nuevo reporte',<---- Reporte de prueba
-//   Monto:'1000.50',
-//   Modena:'Dolares',
-//   Tipo:'Gasto'
+  // Nombre:'Prueba de Reporte 2',
+  // Descripcion:'Esto es la segunda prueba de agregar un nuevo reporte',//<---- Reporte de prueba
+  // Monto:'1000.50',
+  // Modena:'Dolares',
+  // Tipo:'Gasto'
 // });
 //
 // nuevoReporte.save().then((reporte) => {
-//   console.log(`Reporte: ${JSON.stringify(reporte, undefined, 2)}`);<---- Como guardar un Reporte
+//   console.log(`Reporte: ${JSON.stringify(reporte, undefined, 2)}`);//<---- Como guardar un Reporte
 // }, (error) =>{
 //   console.log('No fue posible agregar el reporte');
 // });

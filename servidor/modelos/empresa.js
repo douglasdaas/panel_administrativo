@@ -13,7 +13,7 @@ var Empresa = mongoose.model('Empresa',{
     required: true,
     minlength: 1,
     maxlength: 10,
-    // trimp: true
+    trimp: true
   }
 });
 
