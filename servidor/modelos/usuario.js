@@ -7,6 +7,18 @@ var Usuario = mongoose.model('Usuario',{
     minlength: 1,
     trimp: true
   },
+  Apellido: {
+    type: String,
+    required: true,
+    minlength: 1,
+    trimp: true
+  },
+  Cedula:{
+    type: Number,
+    required: true,
+    minlength: 1,
+    trimp: true
+  },
   email: {
     type: String,
     required: true,

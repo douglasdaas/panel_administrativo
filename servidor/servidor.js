@@ -15,14 +15,17 @@ var app = express();// Se inicia express en la variable app
 
 app.use(bodyParser.json());
 
-app.post('/empresas', (req, res) =>{ //<--- la ruta /reporte es para crear una nueva empresa
-  var reporte = new Empresa({
+app.post('/usuarios', (req, res) =>{ //<--- la ruta /reporte es para crear una nuevo usuario
+  var reporte = new Usuario({
     Nombre: req.body.Nombre,
-    RIF: req.body.RIF
+    Apellido: req.body.Apellido,
+    Cedula: req.body.Cedula,
+    email: req.body.email
+
   });
 
-  reporte.save().then( (empresa) => { //<----- guarda una nueva empresa
-    res.send(empresa);
+  reporte.save().then( (usuario) => { //<----- guarda un nuevo usuario
+    res.send(usuario);
   }, (error) => {
     res.status(400).send(error);// envia el error del guardado
   })
