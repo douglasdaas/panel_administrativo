@@ -8,6 +8,7 @@ const bodyParser = require('body-Parser');//bodyParser convierte JSON en objetos
 var {mongoose} = require('./db/mongoose');
 var {Reporte} = require('./modelos/reporte');
 var {Usuario} = require('./modelos/usuario');
+var {Empresa} = require('./modelos/empresa');
 
 
 var app = express();// Se inicia express en la variable app
