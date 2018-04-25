@@ -15,6 +15,8 @@ var app = express();// Se inicia express en la variable app
 
 app.use(bodyParser.json());
 
+//agregar usuario
+
 app.post('/usuarios', (req, res) =>{ //<--- la ruta /reporte es para crear una nuevo usuario
   var reporte = new Usuario({
     Nombre: req.body.Nombre,
@@ -30,21 +32,41 @@ app.post('/usuarios', (req, res) =>{ //<--- la ruta /reporte es para crear una n
     res.status(400).send(error);// envia el error del guardado
   });
 
-  app.post('/empresas', (req, res) =>{ //<--- la ruta /reporte es para crear una nueva empresa
-    var reporte = new Empresa({
-      Nombre: req.body.Nombre,
-      RIF: req.body.RIF
-    });
 
-    reporte.save().then( (empresa) => { //<----- guarda una nueva empresa
-      res.send(empresa);
-    }, (error) => {
-      res.status(400).send(error);// envia el error del guardado
-    });
+});
 
-    
+//agregar empresas
 
+app.post('/empresas', (req, res) =>{ //<--- la ruta /reporte es para crear una nueva empresa
+  var reporte = new Empresa({
+    Nombre: req.body.Nombre,
+    RIF: req.body.RIF
+  });
 
+  reporte.save().then( (empresa) => { //<----- guarda una nueva empresa
+    res.send(empresa);
+  }, (error) => {
+    res.status(400).send(error);// envia el error del guardado
+  });
+
+});
+
+//agregar reportes
+
+app.post('/reportes', (req, res) =>{ //<--- la ruta /reporte es para crear un nuevo reporte
+  var reporte = new Reporte({
+    Nombre: req.body.Nombre,
+    Descripcion: req.body.Descripcion,
+    Monto: req.body.Monto,
+    Moneda: req.body.Moneda,
+    Tipo: req.body.Tipo
+  });
+
+  reporte.save().then( (reporte) => { //<----- guarda un nuevp reporte
+    res.send(reporte);
+  }, (error) => {
+    res.status(400).send(error);// envia el error del guardado
+  });
 });
 
 app.get('/', (req, res) =>{
