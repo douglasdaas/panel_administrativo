@@ -32,7 +32,16 @@ app.post('/usuarios', (req, res) =>{ //<--- la ruta /reporte es para crear una n
     res.status(400).send(error);// envia el error del guardado
   });
 
+});
 
+// obtener todos los usuarios
+
+app.get('/usuarios', (req, res) =>{
+  Usuario.find().then((usuarios) => {
+    res.send({usuarios});
+  }, (error) =>{
+    res.status(400).send(error);
+  });
 });
 
 //agregar empresas
@@ -51,6 +60,16 @@ app.post('/empresas', (req, res) =>{ //<--- la ruta /reporte es para crear una n
 
 });
 
+// obtener todos las empresas
+
+app.get('/empresas', (req, res) =>{
+  Empresa.find().then((empresas) => {
+    res.send({empresas});
+  }, (error) =>{
+    res.status(400).send(error);
+  });
+});
+
 //agregar reportes
 
 app.post('/reportes', (req, res) =>{ //<--- la ruta /reporte es para crear un nuevo reporte
@@ -65,9 +84,21 @@ app.post('/reportes', (req, res) =>{ //<--- la ruta /reporte es para crear un nu
   reporte.save().then( (reporte) => { //<----- guarda un nuevp reporte
     res.send(reporte);
   }, (error) => {
-    res.status(400).send(error);// envia el error del guardado
+    res.status(400).send(error);// <--- envia el error del guardado
   });
 });
+
+//obtener todos los reportes
+
+app.get('/reportes', (req, res) =>{
+  Reporte.find().then((reportes) => {
+    res.send({reportes});
+  }, (error) =>{
+    res.status(400).send(error);
+  })
+});
+
+//Acceso a la pagina principal
 
 app.get('/', (req, res) =>{
   res.send('<h1>Panel administrativo<h1/>');// al recibir un request (conexion) se envia como respueta "Panel administrativo"
