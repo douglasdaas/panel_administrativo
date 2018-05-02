@@ -2,9 +2,10 @@
 
 console.log('Se inicio servidor.js');
 
+const _ = require('lodash');
 const express = require('express'); //Se utiliza la libreria express para el manejo de conexiones mas informacion en expressjs.com
 const bodyParser = require('body-Parser');//bodyParser convierte JSON en objetos
-const {ObjectID} = require('mongodb');
+var {ObjectID} = require('mongodb');
 
 
 var {mongoose} = require('./db/mongoose');
@@ -19,7 +20,7 @@ app.use(bodyParser.json());
 // USUARIO
 
 //agregar usuario
-app.post('/usuarios', (req, res) =>{ //<--- la ruta /reporte es para crear una nuevo usuario
+app.post('/usuarios', (req, res) =>{ //<--- la ruta /usuarios es para crear una nuevo usuario
   var reporte = new Usuario({
     Nombre: req.body.Nombre,
     Apellido: req.body.Apellido,
@@ -61,6 +62,23 @@ app.get('/usuarios/:id',(req,res) =>{
   });
 });
 
+//actualizar usuario por id
+app.patch('/usuarios/:id', (req,res) =>{
+  var id = req.params.id;
+  var body = _.pick(req.body, ['Nombre', 'Apellido', 'Cedula', 'email']);
+  if (!ObjectID.isValid(id)){
+    return res.status(404).send('El id es invalido');
+  }
+  Usuario.findByIdAndUpdate(id, {$set: body}, {new: true}).then((usuario) => {
+    if (!usuario) {
+      res.status(404).send('No se encontro');
+    }
+    res.send(usuario);
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
+
 // eliminar usuario
 app.delete('/usuarios/:id', (req, res) =>{ //<----- la eliminacion requiere el id del usuario a eliminar
   var id = req.params.id;
@@ -80,7 +98,7 @@ app.delete('/usuarios/:id', (req, res) =>{ //<----- la eliminacion requiere el i
 // EMPRESA
 
 //agregar empresas
-app.post('/empresas', (req, res) =>{ //<--- la ruta /reporte es para crear una nueva empresa
+app.post('/empresas', (req, res) =>{ //<--- la ruta /empresas es para crear una nueva empresa
   var reporte = new Empresa({
     Nombre: req.body.Nombre,
     RIF: req.body.RIF
@@ -119,6 +137,23 @@ app.get('/empresas/:id',(req,res) =>{
   });
 });
 
+//actualizar empresa por id
+app.patch('/empresas/:id', (req,res) =>{
+  var id = req.params.id;
+  var body = _.pick(req.body, ['Nombre', 'RIF']);
+  if (!ObjectID.isValid(id)){
+    return res.status(404).send('El id es invalido');
+  }
+  Empresa.findByIdAndUpdate(id, {$set: body}, {new: true}).then((empresa) => {
+    if (!empresa) {
+      res.status(404).send('No se encontro');
+    }
+    res.send(empresa);
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
+
 // eliminar empresa
 app.delete('/empresas/:id', (req, res) =>{ //<----- la eliminacion requiere el id de la empresa a eliminar
   var id = req.params.id;
@@ -138,7 +173,7 @@ app.delete('/empresas/:id', (req, res) =>{ //<----- la eliminacion requiere el i
 // REPORTE
 
 //agregar reportes
-app.post('/reportes', (req, res) =>{ //<--- la ruta /reporte es para crear un nuevo reporte
+app.post('/reportes', (req, res) =>{ //<--- la ruta /reportes es para crear un nuevo reporte
   var reporte = new Reporte({
     Nombre: req.body.Nombre,
     Descripcion: req.body.Descripcion,
@@ -176,6 +211,23 @@ app.get('/reportes/:id',(req,res) =>{
     res.send(JSON.stringify(reporte, undefined, 2));
   }).catch((e) => {
     res.status(400).send('Ocurrio un error');
+  });
+});
+
+//actualizar reporte por id
+app.patch('/reportes/:id', (req,res) =>{
+  var id = req.params.id;
+  var body = _.pick(req.body, ['Nombre', 'Descripcion', 'Monto', 'Moneda', 'Tipo']);
+  if (!ObjectID.isValid(id)){
+    return res.status(404).send('El id es invalido');
+  }
+  Reporte.findByIdAndUpdate(id, {$set: body}, {new: true}).then((reporte) => {
+    if (!reporte) {
+      res.status(404).send('No se encontro');
+    }
+    res.send(JSON.stringify(reporte, undefined, 2));
+  }).catch((e) => {
+    res.status(400).send();
   });
 });
 
