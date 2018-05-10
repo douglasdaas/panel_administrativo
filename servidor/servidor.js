@@ -21,20 +21,16 @@ app.use(bodyParser.json());
 
 //agregar usuario
 app.post('/usuarios', (req, res) =>{ //<--- la ruta /usuarios es para crear una nuevo usuario
-  var reporte = new Usuario({
-    Nombre: req.body.Nombre,
-    Apellido: req.body.Apellido,
-    Cedula: req.body.Cedula,
-    email: req.body.email
+  var body = _.pick(req.body, ['nombre','apellido','cedula','email', 'password']); //<--- datos que me proprciona el usuario
+  var usuario = new Usuario(body); //<---- creo el usuario
 
+  usuario.save().then(() => {  //<----- guarda un nuevo usuario
+    return usuario.generateAuthToken(); //<----- genera un token de autorizacion para el usuario
+  }).then((token) => { //promesa del token que me devolvio generateAuthToken()
+    res.header('x-auth', token).send(usuario) //<----- devuelve el token(en un header) y el usuario
+  }).catch((e) => { //<---- manejo los erroes
+    res.status(400).send(e);
   });
-
-  reporte.save().then( (usuario) => { //<----- guarda un nuevo usuario
-    res.send(usuario);
-  }, (error) => {
-    res.status(400).send(error);// envia el error del guardado
-  });
-
 });
 
 // obtener todos los usuarios
