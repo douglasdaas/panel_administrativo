@@ -12,11 +12,33 @@ var {mongoose} = require('./db/mongoose');
 var {Reporte} = require('./modelos/reporte');
 var {Usuario} = require('./modelos/usuario');
 var {Empresa} = require('./modelos/empresa');
+var {autentificar} = require('./midelware/autenticar');
 
 
 var app = express();// Se inicia express en la variable app
 
 app.use(bodyParser.json());
+//autentificar
+
+// var autentificar (req, res, next) { // funcion midelware
+//   var token = req.header('x-auth'); //<----guarda el token desde el header
+//
+//   Usuario.findByToken(token).then((usuario) => { //<---- encuentra el usuario desde el token y devuelve el usuario
+//
+//     if(!usuario){ //<----- verifica si encontro el usuario
+//       return Promise.reject() //<--- devulve automaticamente al catch si no lo encuntra
+//     }
+//
+//     req.usuario = usuario;// <---- asigna el valor del usuario encontrado
+//     req.token = token; //<---- asigna el valor del token encontrado
+//     next();
+//   }).catch((e) => {
+//     res.status(401).send(); //<----- 401 devuelve error de auntenticacion
+//   });
+// };
+
+
+
 // USUARIO
 
 //agregar usuario
@@ -26,12 +48,20 @@ app.post('/usuarios', (req, res) =>{ //<--- la ruta /usuarios es para crear una 
 
   usuario.save().then(() => {  //<----- guarda un nuevo usuario
     return usuario.generateAuthToken(); //<----- genera un token de autorizacion para el usuario
-  }).then((token) => { //promesa del token que me devolvio generateAuthToken()
+  }).then((token) => { //<----- promesa del token que me devolvio generateAuthToken()
     res.header('x-auth', token).send(usuario) //<----- devuelve el token(en un header) y el usuario
   }).catch((e) => { //<---- manejo los erroes
     res.status(400).send(e);
   });
 });
+
+//obtener usuario loguiado
+
+app.get('/usuarios/yo', autentificar, (req,res) => {
+  res.send(req.usuario);
+});
+
+
 
 // obtener todos los usuarios
 app.get('/usuarios', (req, res) =>{
