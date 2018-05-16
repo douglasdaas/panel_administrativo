@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
 
 var UsuarioSchema = new mongoose.Schema({ //<--- se usa UsuarioSchema para poder agregar metodos a todos los Usuarios
   nombre: {
@@ -86,6 +87,22 @@ UsuarioSchema.statics.findByToken = function (token) {
     'tokens.acces': 'auth' //<----- el tipo de acceso del usuario encontrado
   });
 };
+
+UsuarioSchema.pre('save', function (next) {
+  usuario = this;
+
+  if (usuario.isModified()){
+    bcrypt.genSalt(10, (e, salt) =>{
+      bcrypt.hash(usuario.password, salt, (e, hash) =>{
+        usuario.password = hash;
+        next();
+      });
+    });
+
+  }else {
+    next();
+  }
+});
 
 var Usuario = mongoose.model('Usuario', UsuarioSchema); //<---- Dejo el modelo igual que antes, le paso los datos de UsuarioSchema
 
