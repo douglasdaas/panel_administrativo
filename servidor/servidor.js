@@ -34,12 +34,25 @@ app.post('/usuarios', (req, res) =>{ //<--- la ruta /usuarios es para crear una 
   });
 });
 
-//obtener usuario loguiado
+//obtener usuario yo
 
 app.get('/usuarios/yo', autentificar, (req,res) => {
   res.send(req.usuario);
 });
 
+// login de usuario
+
+app.post('/usuarios/login', (req, res) =>{
+  var body = _.pick(req.body, ['email', 'password']); //<----- toma el usuario y la contraseña para compararlos
+
+  Usuario.findByCredenciales(body.email, body.password).then( (usuario) => { //<----- verifica que el usuario tiene el usuario y la clave correcta
+    return usuario.generateAuthToken().then((token) => { //<----- genera un token de autorizacion para el usuario
+      res.header('x-auth', token).send(usuario); //<----- devuelve el token(en un header) y el usuario
+    });
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
 
 // obtener todos los usuarios
 app.get('/usuarios', (req, res) =>{

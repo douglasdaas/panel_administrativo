@@ -71,6 +71,26 @@ UsuarioSchema.methods.generateAuthToken = function () { //<----- funcion que gen
   });
 };
 
+UsuarioSchema.statics.findByCredenciales = function (email, password) {
+  var Usuario = this;
+
+  return Usuario.findOne({email}).then((usuario) => {
+    if (!usuario){ //<------- verifica si el usuario existe
+      return Promise.reject();
+    }
+
+  return new Promise((resolve, reject) => {
+      bcrypt.compare(password, usuario.password, (err, res) =>{ // <------ verifica que el hash guardado es el mismo texto plano
+        if (res){
+          resolve(usuario); // <------ devuelve el usuario, la contraseña es correcta
+        } else {
+          reject(); // <----- la contraseña es incorrecta
+        }
+      });
+    });
+  });
+};
+
 UsuarioSchema.statics.findByToken = function (token) {
   var Usuario = this; //<------ para tomar todos los UsuarioSchema
   var decodificado; //<---- guarda los datos decodificados del token
@@ -91,7 +111,7 @@ UsuarioSchema.statics.findByToken = function (token) {
 UsuarioSchema.pre('save', function (next) {
   usuario = this;
 
-  if (usuario.isModified()){
+  if (usuario.isModified('password')){
     bcrypt.genSalt(10, (e, salt) =>{
       bcrypt.hash(usuario.password, salt, (e, hash) =>{
         usuario.password = hash;
