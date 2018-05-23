@@ -71,6 +71,18 @@ UsuarioSchema.methods.generateAuthToken = function () { //<----- funcion que gen
   });
 };
 
+UsuarioSchema.methods.removeToken = function (token) {
+  usuario = this;
+
+  return usuario.update({
+    $pull: {
+      tokens:{
+        token: token
+      }
+    }
+  });
+};
+
 UsuarioSchema.statics.findByCredenciales = function (email, password) {
   var Usuario = this;
 

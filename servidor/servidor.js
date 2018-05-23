@@ -54,6 +54,16 @@ app.post('/usuarios/login', (req, res) =>{
   });
 });
 
+// deslogiar usuario
+
+app.delete('/usuarios/yo/token', autentificar, (req,res) =>{ //<------ autentificar me pasa el usuario y el token, y verifica que el usuario este logiado
+  req.usuario.removeToken(req.token).then(() => { //<-------- elimina el token para deslogiar el usuario
+    res.status(200).send();
+  }, () =>{ //<-------- manejo de errores
+    res.status(400).send();
+  });
+});
+
 // obtener todos los usuarios
 app.get('/usuarios', (req, res) =>{
   Usuario.find().then((usuarios) => {

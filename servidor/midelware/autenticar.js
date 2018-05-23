@@ -4,7 +4,6 @@ var autentificar = (req, res, next) => { // funcion midelware
   var token = req.header('x-auth'); //<----guarda el token desde el header
 
   Usuario.findByToken(token).then((usuario) => { //<---- encuentra el usuario desde el token y devuelve el usuario
-
     if(!usuario){ //<----- verifica si encontro el usuario
       return Promise.reject() //<--- devulve automaticamente al catch si no lo encuntra
     }
