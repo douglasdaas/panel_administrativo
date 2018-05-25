@@ -126,12 +126,10 @@ app.delete('/usuarios/:id', (req, res) =>{ //<----- la eliminacion requiere el i
 
 //agregar empresas
 app.post('/empresas', (req, res) =>{ //<--- la ruta /empresas es para crear una nueva empresa
-  var reporte = new Empresa({
-    Nombre: req.body.Nombre,
-    RIF: req.body.RIF
-  });
+  var body = _.pick(req.body, ['Nombre', 'RIF'])
+  var empresa = new Empresa(body);
 
-  reporte.save().then( (empresa) => { //<----- guarda una nueva empresa
+  empresa.save().then( (empresa) => { //<----- guarda una nueva empresa
     res.send(empresa);
   }, (error) => {
     res.status(400).send(error);// envia el error del guardado
@@ -200,13 +198,14 @@ app.delete('/empresas/:id', (req, res) =>{ //<----- la eliminacion requiere el i
 // REPORTE
 
 //agregar reportes
-app.post('/reportes', (req, res) =>{ //<--- la ruta /reportes es para crear un nuevo reporte
+app.post('/reportes', autentificar, (req, res) =>{ //<--- la ruta /reportes es para crear un nuevo reporte
   var reporte = new Reporte({
     Nombre: req.body.Nombre,
     Descripcion: req.body.Descripcion,
     Monto: req.body.Monto,
     Moneda: req.body.Moneda,
-    Tipo: req.body.Tipo
+    Tipo: req.body.Tipo,
+    _creador: req.usuario._id
   });
 
   reporte.save().then( (reporte) => { //<----- guarda un nuevp reporte
@@ -217,8 +216,10 @@ app.post('/reportes', (req, res) =>{ //<--- la ruta /reportes es para crear un n
 });
 
 //obtener todos los reportes
-app.get('/reportes', (req, res) =>{
-  Reporte.find().then((reportes) => {
+app.get('/reportes', autentificar, (req, res) =>{
+  Reporte.find({
+    _creador: req.usuario._id
+  }).then((reportes) => {
     res.send({reportes});
   }, (error) =>{
     res.status(400).send(error);
@@ -226,12 +227,15 @@ app.get('/reportes', (req, res) =>{
 });
 
 // obtener repoerte por id
-app.get('/reportes/:id',(req,res) =>{
+app.get('/reportes/:id', autentificar, (req,res) =>{
   var id = req.params.id;
   if (!ObjectID.isValid(id)){
     return res.status(404).send('El id es invalido');
   }
-  Reporte.findById(id).then((reporte) => {
+  Reporte.findOne({
+    _id: id,
+    _creador: req.usuario._id
+  }).then((reporte) => {
     if (!reporte){
       return res.status(404).send('No se encontro');
     }
@@ -241,14 +245,31 @@ app.get('/reportes/:id',(req,res) =>{
   });
 });
 
+//obtener reportes por atributos
+app.post('/reportes/atributos', autentificar, (req, res) =>{
+  Reporte.find({
+    Nombre: req.body.Nombre,
+    Descripcion: req.body.Descripcion,
+    Monto: req.body.Monto,
+    Moneda: req.body.Moneda,
+    Tipo: req.body.Tipo,
+    _creador: req.usuario._id
+    }
+  ).then((reportes) => {
+    res.send({reportes});
+  }, (error) =>{
+    res.status(400).send(error);
+  })
+});
+
 //actualizar reporte por id
-app.patch('/reportes/:id', (req,res) =>{
+app.patch('/reportes/:id', autentificar, (req,res) =>{
   var id = req.params.id;
   var body = _.pick(req.body, ['Nombre', 'Descripcion', 'Monto', 'Moneda', 'Tipo']);
   if (!ObjectID.isValid(id)){
     return res.status(404).send('El id es invalido');
   }
-  Reporte.findByIdAndUpdate(id, {$set: body}, {new: true}).then((reporte) => {
+  Reporte.findOneAndUpdate({_id: id, _creador: req.usuario._id}, {$set: body}, {new: true}).then((reporte) => {
     if (!reporte) {
       res.status(404).send('No se encontro');
     }
@@ -259,12 +280,15 @@ app.patch('/reportes/:id', (req,res) =>{
 });
 
 // eliminar reporte
-app.delete('/reportes/:id', (req, res) =>{ //<----- la eliminacion requiere el id del reporte a eliminar
+app.delete('/reportes/:id', autentificar, (req, res) =>{ //<----- la eliminacion requiere el id del reporte a eliminar
   var id = req.params.id;
   if (!ObjectID.isValid(id)){
     return res.status(404).send('El id es invalido');
   }
-  Reporte.findByIdAndRemove(id).then((reporte) => {
+  Reporte.findOneAndRemove({
+    _id: id,
+    _creador: req.usuario.id
+  }).then((reporte) => {
     if (!reporte){
       return res.status(404).send('No se encontro el reporte');
     }

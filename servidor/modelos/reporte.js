@@ -31,6 +31,10 @@ var Reporte = mongoose.model('Reporte',{
     required: true,
     minlength: 1,
     trimp: true
+  },
+  _creador: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
   }
 });
 
