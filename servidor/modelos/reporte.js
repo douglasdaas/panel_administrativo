@@ -35,7 +35,13 @@ var Reporte = mongoose.model('Reporte',{
   _creador: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
-  }
+  }, 
+   _visualizadores: [
+    visualizar:{
+      type: mongoose.Schema.Types.ObjectId,
+      required: false
+    }
+  ]
 });
 
 // var nuevoReporte = new Reporte({
