@@ -41,7 +41,7 @@ var Reporte = mongoose.model('Reporte',{
       type: mongoose.Schema.Types.ObjectId,
       required: false
     }
-  ]
+  ]}
 });
 
 // var nuevoReporte = new Reporte({
