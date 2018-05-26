@@ -41,7 +41,13 @@ var Reporte = mongoose.model('Reporte',{
       type: mongoose.Schema.Types.ObjectId,
       required: false
     }
-  ]}
+  ],
+   _empresa: {
+    type: mongoose.Schema.Types.ObjectId,
+    required:true 
+   }
+
+}
 });
 
 // var nuevoReporte = new Reporte({
